@@ -1,46 +1,59 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿
+using System;
 
-Console.WriteLine("Hello, World!");
-LearningActivity5_1();
-return;
-
-void LearningActivity5_1()
+class HighScore
 {
-    Random randomScore = new Random();
-    while (true)
+    List<Tuple<string, int>> scores = new List<Tuple<string, int>>();
+    public void AddScore(string initials, int score)
     {
-        GameSelection choice = ChooseOption();
-        //int newHighScore = randomScore.Next(1000, 1000000);
-        //Console.WriteLine($"You finished with a score of {newHighScore}");
-        //if the player 
-
+        scores.Add(new Tuple<string, int>(initials, score));
+        scores.Sort((a, b) => b.Item2.CompareTo(a.Item2)); // Sort in descending order
+    }
+    public void ShowScores()
+    {
+        if (scores.Count == 0)
+        {
+            Console.WriteLine("No scores yet.");
+        }
+        else
+        {
+            Console.WriteLine("High Scores:");
+            foreach (var score in scores)
+            {
+                Console.WriteLine($"{score.Item1}: {score.Item2}");
+            }
+        }
     }
 }
-
-GameSelection ChooseOption()
+class Program
 {
-    bool validSelection = false;
-    int selection = 0;
-    while (!validSelection)
+    static void Main()
     {
-        Console.WriteLine(
-            "Would you like to:\n\t 1: Play again\n\t 2: See the list of high scores\n\t 3: Exit the game?");
-
-        if (int.TryParse(Console.ReadLine(), out selection) && selection >= 1 && selection <= 3)
-            validSelection = true;
-
+        HighScore board = new HighScore();
+        bool running = true;
+        while (running)
+        {
+            Console.WriteLine("\n1. Add Score\n2. View Scores\n3. Exit");
+            string choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    Console.Write("Enter initials: ");
+                    string initials = Console.ReadLine();
+                    Console.Write("Enter score: ");
+                    int score = int.Parse(Console.ReadLine());
+                    board.AddScore(initials, score);
+                    break;
+                case "2":
+                    board.ShowScores();
+                    break;
+                case "3":
+                    running = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid option.");
+                    break;
+            }
+        }
     }
-
-    return (GameSelection)selection;
-
-}
-//Be kind, rewind.
-void LearningActivity5_2()
-{
-
-}
-
-enum GameSelection
-{
-    Play = 1, SeeHighScore = 2, Exit = 3
 }
